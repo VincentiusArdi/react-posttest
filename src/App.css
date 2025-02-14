@@ -37,6 +37,29 @@
   color: #61dafb;
 }
 
+.custom-radio-green .p-radiobutton-box {
+  border-color: green !important;
+  background-color: green !important;
+}
+
+.custom-radio-red .p-radiobutton-box {
+  border-color: red !important;
+  background-color: red !important;
+}
+
+.btn {
+  background-color: #ca6f14;
+  display: ruby;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: center;
+  /* font-size: calc(10px + 2vmin); */
+  padding: 10px;
+  color: white;
+  border-radius: 12px;
+  margin-right: 10px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

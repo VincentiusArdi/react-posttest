@@ -19,7 +19,6 @@ import storeInventaris from '../component/zustand/store';
 function Inventaris() {
 
     const { formInput, updatedForm } = storeInventaris();
-    const [inventaris, setInventaris] = useState([]);
     const [visible, setVisible] = useState(false);
     const [date, setDate] = useState(null);
     const [kondisi, setKondisi] = useState("");
@@ -41,18 +40,6 @@ function Inventaris() {
     };
 
     const [dataForm, setDataForm] = useState(inputForm);
-
-    const columns = [
-        { field: 'inventarisId', header: 'Inventaris ID' },
-        { field: 'jenisInventaris', header: 'Jenis Inventaris' },
-        { field: 'merk', header: 'Merk' },
-        { field: 'typeMerk', header: 'Type Merk' },
-        { field: 'kondisi', header: 'Kondisi' },
-        { field: 'pic', header: 'PIC' },
-        { field: 'projek', header: 'Projek' },
-        { field: 'hariTanggal', header: 'Hari/Tanggal' },
-    ];
-
 
     const items = [
         'Laptop',
@@ -86,10 +73,28 @@ function Inventaris() {
         clear: "Bersihkan"
     });
 
+    const actionBodyTemplate = (rowData) => {
+        return (
+            <div className="flex gap-2">
+                <Button
+                    icon="pi pi-pencil"
+                    className="p-button-sm p-button-info"
+                onClick={() => hadleEdit(rowData)}
+                />
+                <Button
+                    icon="pi pi-trash"
+                    className="p-button-sm p-button-danger"
+                    onClick={() => handleDelete(rowData)}
+                />
+            </div>
+        );
+    };
+
     const handleSubmit = () => {
 
         let payload = dataForm;
 
+        // console.log(payload)
         if (payload.idInventaris === "") {
             payload.idInventaris = `OGY.${formattedDate}.${uuidv4()}`;
 
@@ -115,6 +120,35 @@ function Inventaris() {
 
     }
 
+    const hadleEdit = (rowData) => {
+        console.log(rowData);
+        setDate(new Date(rowData.tanggalInput))
+        setVisible(true);
+        setDataForm(rowData);
+
+    }
+
+    const handleDelete = (rowData) => {
+        Swal.fire({
+            title: "Apakah Anda yakin?",
+            text: "Data yang dihapus tidak dapat dikembalikan!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            cancelButtonText: "Cancel",
+            confirmButtonText: "Delete!",
+            reverseButtons: true,
+        }
+        ).then((result) => {
+            if (result.isConfirmed) {
+                const filteredData = formInput.filter((item) => item.idInventaris !== rowData.idInventaris);
+                updatedForm(filteredData);
+                Swal.fire("Berhasil", "Data telah dihapus!", "success");
+            }
+        });
+    };
+
     const headerTemplate = () => {
         return (
             <div className="flex justify-content-between align-items-center w-full">
@@ -129,10 +163,15 @@ function Inventaris() {
         <div>
             {/* PANEL TABEL DAFTAR INVENTARIS */}
             <Panel header="Daftar Inventaris" headerTemplate={headerTemplate} className="md:mt-8">
-                <DataTable value={inventaris}>
-                    {columns.map((col, i) => (
-                        <Column key={col.field} field={col.field} header={col.header} />
-                    ))}
+                <DataTable value={formInput}>
+                    <Column field="tanggalInput" header="Tanggal Input" />
+                    <Column field="jenisInventaris" header="Jenis Inventaris" />
+                    <Column field="merk" header="Merk" />
+                    <Column field="typeMerk" header="Type Merk" />
+                    <Column field="kondisi" header="Kondisi" />
+                    <Column field="pic" header="PIC" />
+                    <Column field="projek" header="Projek" />
+                    <Column header="Action" body={actionBodyTemplate} />
                 </DataTable>
             </Panel>
 
@@ -155,16 +194,27 @@ function Inventaris() {
                                 <label className="font-semibold text-primary-50 block mb-2">
                                     Tanggal Input Form
                                 </label>
-                                <Calendar value={date} onChange={(e) => setDataForm({...dataForm, tanggalInput: e.value})} locale="id" showIcon className="w-full" />
+                                <Calendar
+                                    value={date}
+                                    onChange={(e) => {
+                                        if (e.value) {
+                                            const selectedDate = new Date(e.value);
+                                            const formattedDate = selectedDate
+                                                .toLocaleDateString("id-ID", { day: "2-digit", month: "2-digit", year: "2-digit" })
+                                                .replace(/\./g, "/"); // Mengubah titik menjadi garis miring
+                                            setDataForm({ ...dataForm, tanggalInput: formattedDate });
+                                        }
+                                    }}
+                                    locale="id" showIcon className="w-full" />
                             </div>
 
                             <div className="lg:col-6 sm:col-3">
                                 <label className="text-primary-50 font-semibold">
                                     Jenis Inventaris
                                 </label>
-                                <Dropdown 
-                                    value={dataForm.jenisInventaris} 
-                                    onChange={(e) => setDataForm({...dataForm, jenisInventaris: e.value})} options={items}
+                                <Dropdown
+                                    value={dataForm.jenisInventaris}
+                                    onChange={(e) => setDataForm({ ...dataForm, jenisInventaris: e.value })} options={items}
                                     placeholder="Select Item" className="w-full bg-white-alpha-20 border-none text-primary-50" />
                             </div>
 
@@ -172,10 +222,10 @@ function Inventaris() {
                                 <label className="text-primary-50 font-semibold">
                                     Merk
                                 </label>
-                                <InputText 
-                                    id="merk" 
-                                    value={dataForm.merk} 
-                                    onChange={(e) => setDataForm({...dataForm, merk: e.value})} 
+                                <InputText
+                                    id="merk"
+                                    value={dataForm.merk}
+                                    onChange={(e) => setDataForm({ ...dataForm, merk: e.target.value })}
                                     className="w-full bg-white-alpha-20 border-none p-3 text-primary-50" />
                             </div>
 
@@ -183,10 +233,10 @@ function Inventaris() {
                                 <label className="text-primary-50 font-semibold">
                                     Type Merk
                                 </label>
-                                <InputText 
-                                    id="typeMerk" 
-                                    value={dataForm.typeMerk} 
-                                    onChange={(e) => setDataForm({...dataForm, typeMerk: e.value})} 
+                                <InputText
+                                    id="typeMerk"
+                                    value={dataForm.typeMerk}
+                                    onChange={(e) => setDataForm({ ...dataForm, typeMerk: e.target.value })}
                                     className="w-full bg-white-alpha-20 border-none p-3 text-primary-50" />
                             </div>
 
@@ -194,9 +244,9 @@ function Inventaris() {
                                 <label className="text-primary-50 font-semibold">
                                     Projek
                                 </label>
-                                <Dropdown 
-                                    value={dataForm.projek} 
-                                    onChange={(e) => setDataForm({...dataForm, projek: e.value})} options={project} optionLabel="name"
+                                <Dropdown
+                                    value={dataForm.projek}
+                                    onChange={(e) => setDataForm({ ...dataForm, projek: e.value })} options={project} optionLabel="name"
                                     placeholder="Select a Item" className="w-full bg-white-alpha-20 border-none text-primary-50" />
                             </div>
 
@@ -204,10 +254,10 @@ function Inventaris() {
                                 <label className="text-primary-50 font-semibold">
                                     PIC
                                 </label>
-                                <InputText 
-                                    id="pic" 
-                                    value={dataForm.pic} 
-                                    onChange={(e) => setDataForm({...dataForm, pic: e.value})} 
+                                <InputText
+                                    id="pic"
+                                    value={dataForm.pic}
+                                    onChange={(e) => setDataForm({ ...dataForm, pic: e.target.value })}
                                     className="w-full bg-white-alpha-20 border-none p-3 text-primary-50" />
                             </div>
                             <div className="lg:col-6 sm:col-3">
@@ -217,14 +267,14 @@ function Inventaris() {
                                 <div className="flex gap-3 align-items-center">
                                     <div className="flex align-items-center">
                                         <RadioButton inputId="kondisi1" name="kondisi" value="Baik"
-                                            onChange={(e) => setDataForm({...dataForm, kondisi: e.value})} checked={kondisi === "Baik"}
+                                            onChange={(e) => setDataForm({ ...dataForm, kondisi: e.value })} checked={kondisi === "Baik"}
                                             className={dataForm.kondisi === "Baik" ? "custom-radio-green" : ""}
                                         />
                                         <label htmlFor="kondisi1" className="ml-2 text-primary-50">Baik</label>
                                     </div>
                                     <div className="flex align-items-center">
                                         <RadioButton inputId="kondisi2" name="kondisi" value="Rusak"
-                                            onChange={(e) => setDataForm({...dataForm, kondisi: e.value})} checked={kondisi === "Rusak"}
+                                            onChange={(e) => setDataForm({ ...dataForm, kondisi: e.value })} checked={kondisi === "Rusak"}
                                             className={dataForm.kondisi === "Rusak" ? "custom-radio-red" : ""}
                                         />
                                         <label htmlFor="kondisi2" className="ml-2 text-primary-50">Rusak</label>

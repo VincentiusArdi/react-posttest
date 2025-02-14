@@ -1,0 +1,155 @@
+/* Navbar Container */
+.nav-header {
+    position: fixed;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    background: linear-gradient(90deg, rgb(21, 2, 129) 0%, rgb(0, 204, 255) 100%);
+    z-index: 1000;
+    padding: 5px 10px;
+}
+
+/* Navbar */
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+}
+
+/* Logo */
+.nav-logo {
+    width: 120px;
+    height: auto;
+    cursor: pointer;
+}
+
+/* Menu Styling */
+.nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.nav li {
+    margin-left: 20px;
+}
+
+.nav a {
+    text-decoration: none;
+    color: #dbd9d9;
+    font-weight: 700;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.nav a:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Avatar */
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* Hamburger Menu */
+.menu-toggle {
+    display: none;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+}
+
+/* Menu Item Style */
+.custom-menu-item {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background: transparent; 
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+    cursor: pointer;
+}
+
+.custom-menu-item:hover {
+    background: linear-gradient(45deg, #00BFFF, #1E90FF);
+}
+
+/* RESPONSIVE MENU */
+@media (min-width: 768px) {
+    .menu-toggle {
+        display: none !important;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .nav ul {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(90deg, rgb(21, 2, 129) 0%, rgb(0, 204, 255) 100%);
+        padding: 10px;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+        z-index: 1001;
+    }
+
+    .nav ul.show {
+        display: flex;
+    }
+
+    .nav li {
+        margin: 10px 0;
+        text-align: center;
+        color: #fff;
+    }
+
+    .nav-user{
+        display: none;
+    }
+
+    .nav-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+        position: relative;
+    }
+
+    .toggle-bar {
+        display: block;
+        position: absolute;
+        left: 20px; /* Toggle bar di kiri */
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+
+    .nav-logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%); /* Pusatkan logo */
+        width: 120px;
+    }
+}

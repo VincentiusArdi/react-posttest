@@ -21,7 +21,7 @@ function Inventaris() {
     const { formInput, updatedForm } = storeInventaris();
     const [visible, setVisible] = useState(false);
     const [date, setDate] = useState(null);
-    const [kondisi, setKondisi] = useState("");
+    const [kondisi] = useState("");
     const today = new Date();
     const day = String(today.getDate()).padStart(2, "0");
     const month = String(today.getMonth() + 1).padStart(2, "0");
@@ -125,7 +125,7 @@ function Inventaris() {
         setDate(new Date(rowData.tanggalInput))
         setVisible(true);
         setDataForm(rowData);
-
+        
     }
 
     const handleDelete = (rowData) => {

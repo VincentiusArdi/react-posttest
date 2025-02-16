@@ -27,6 +27,7 @@ function Inventaris() {
     const month = String(today.getMonth() + 1).padStart(2, "0");
     const year = String(today.getFullYear()).slice(-2);
     const formattedDate = `${day}${month}${year}`;
+   
 
     const inputForm = {
         idInventaris: '',
@@ -79,7 +80,7 @@ function Inventaris() {
                 <Button
                     icon="pi pi-pencil"
                     className="p-button-sm p-button-info"
-                onClick={() => hadleEdit(rowData)}
+                    onClick={() => hadleEdit(rowData)}
                 />
                 <Button
                     icon="pi pi-trash"
@@ -125,7 +126,7 @@ function Inventaris() {
         setDate(new Date(rowData.tanggalInput))
         setVisible(true);
         setDataForm(rowData);
-        
+
     }
 
     const handleDelete = (rowData) => {
@@ -163,7 +164,7 @@ function Inventaris() {
         <div>
             {/* PANEL TABEL DAFTAR INVENTARIS */}
             <Panel header="Daftar Inventaris" headerTemplate={headerTemplate} className="md:mt-8">
-                <DataTable value={formInput}>
+                <DataTable value={formInput} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}>
                     <Column field="tanggalInput" header="Tanggal Input" />
                     <Column field="jenisInventaris" header="Jenis Inventaris" />
                     <Column field="merk" header="Merk" />

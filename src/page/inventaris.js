@@ -27,7 +27,6 @@ function Inventaris() {
     const month = String(today.getMonth() + 1).padStart(2, "0");
     const year = String(today.getFullYear()).slice(-2);
     const formattedDate = `${day}${month}${year}`;
-   
 
     const inputForm = {
         idInventaris: '',
